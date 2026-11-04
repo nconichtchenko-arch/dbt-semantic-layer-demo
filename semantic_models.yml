@@ -1,0 +1,53 @@
+version: 2
+
+semantic_models:
+  - name: sales
+    description: "Модель продаж для семантического слоя"
+    model: ref('fct_sales')
+    defaults:
+      agg_time_dimension: order_date
+    entities:
+      - name: order
+        type: primary
+        expr: invoice_no
+    dimensions:
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: country
+        type: categorical
+    measures:
+      - name: total_revenue
+        description: "Общая выручка"
+        agg: sum
+        expr: total_revenue
+      - name: order_count_measure
+        description: "Количество заказов (мера)"
+        agg: count_distinct
+        expr: invoice_no
+
+metrics:
+  - name: revenue
+    description: "Общая выручка (метрика)"
+    type: simple
+    label: "Выручка"
+    type_params:
+      measure: total_revenue
+      
+  - name: order_count
+    description: "Количество заказов (метрика)"
+    type: simple
+    label: "Количество заказов"
+    type_params:
+      measure: order_count_measure
+      
+  - name: average_order_value
+    description: "Средний чек"
+    type: derived
+    label: "Средний чек"
+    type_params:
+      expr: revenue / order_count
+      metrics:
+        - name: revenue
+        - name: order_count
