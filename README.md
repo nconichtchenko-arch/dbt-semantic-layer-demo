@@ -1,4 +1,3 @@
-cat << 'EOF' > README.md
 # dbt Semantic Layer (Metrics) Demo
 
 Pet-проект по настройке семантического слоя (Semantic Layer) в dbt. 
